@@ -6,6 +6,7 @@ import {
   UseGuards,
   Body,
 } from '@nestjs/common';
+import { Public } from 'src/decorators/public';
 import { AuthService } from './auth.service';
 import { SignupDto } from './dto/signup.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -15,12 +16,14 @@ import { LocalAuthGuard } from './local-auth.guard';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Public()
   @UseGuards(LocalAuthGuard)
   @Post('signin')
   async signin(@Request() req) {
     return this.authService.signin(req.user);
   }
 
+  @Public()
   @Post('signup')
   async signup(@Body() body: SignupDto) {
     return this.authService.signup(body);

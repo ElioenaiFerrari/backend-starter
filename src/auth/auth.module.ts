@@ -7,6 +7,8 @@ import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
 import { AuthController } from './auth.controller';
 import { Argon2Provider } from './argon2.provider';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Module({
   imports: [
@@ -17,7 +19,16 @@ import { Argon2Provider } from './argon2.provider';
       signOptions: { expiresIn: '60s' },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, Argon2Provider],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    Argon2Provider,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
   exports: [AuthService, JwtModule],
   controllers: [AuthController],
 })
