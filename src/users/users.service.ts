@@ -17,7 +17,11 @@ export class UsersService {
     return this._userModel.findOne({ email });
   }
 
-  async create(params: SignupDto): Promise<any> {
+  async create(params: SignupDto): Promise<User> {
     return this._userModel.create(params);
+  }
+
+  async findAll(query: any): Promise<User[]> {
+    return this._userModel.find(query, '-password');
   }
 }
