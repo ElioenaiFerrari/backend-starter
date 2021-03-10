@@ -1,28 +1,23 @@
 import argon2 from 'argon2';
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { User, UserDocument } from './models/user';
+import { Model } from 'mongoose';
+import { SignupDto } from 'src/auth/dto/signup.dto';
 
 // This should be a real class/interface representing a user entity
-export type User = any;
 
 @Injectable()
 export class UsersService {
-  private readonly users: any[] = [
-    {
-      id: 1,
-      email: 'elioenaiferrari@gmail.com',
-      password:
-        '$argon2i$v=19$m=4096,t=3,p=1$/h2+VZW8714eqh1N3Ui2BQ$75Pejg4E2tK3QqXIjjLPExVf9DTwWRlaUSFJeq3sOM0',
-    },
-  ];
+  constructor(
+    @InjectModel(User.name) private _userModel: Model<UserDocument>,
+  ) {}
 
   async findByEmail(email: string): Promise<User | undefined> {
-    return this.users.find((user) => user.email === email);
+    return this._userModel.findOne({ email });
   }
 
-  async create(params: any): Promise<any> {
-    const id = this.users.length;
-    this.users.push({ id, ...params });
-
-    return this.users.find((user) => user.id === id);
+  async create(params: SignupDto): Promise<any> {
+    return this._userModel.create(params);
   }
 }
