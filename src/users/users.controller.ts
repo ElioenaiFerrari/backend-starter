@@ -7,7 +7,6 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private _usersService: UsersService) {}
 
-  @Public()
   @Get()
   async index(@Query() query: any): Promise<User[]> {
     return this._usersService.findAll(query);
